@@ -281,18 +281,6 @@ void OnboardCommLayer::onReceive(void (*function) (size_t, boolean),
     }
 }
 
-/*void OnboardCommLayer::onReceiveAppMsg(void (*function) (int, byte*, size_t, byte), uint8_t sensor_addr){
-    //_user_onReceiveAppMsg = function;
-    int i=0;
-    while(i<NUM_SENSORS){
-        if(sensor_addr == _sensor_addresses[i])
-            break;
-    }
-    //_user_onReceive = function;
-    if(i<NUM_SENSORS){
-        df_ptrs[i] = function;
-    }
-}*/
 
 
 
@@ -439,24 +427,4 @@ void OnboardCommLayer::_onReceive(int bytesReceived){
     _handleIncomingData(0, true);
 
 }
-
-/*
- Dispatches Application data reception.
-*/
-/*void OnboardCommLayer::_onReceiveAppMsg(int bytesReceived){
-    //receive a message from another node, sensor, or supervisor
-    int idx=0;
-    if(_user_onReceiveAppMsg!=NULL){
-        //_user_onReceiveMsg(msg.data);
-        while(Wire.available()>0){
-            _ibuf[idx] = (uint8_t)Wire.read();
-            idx+=1;
-            if(idx == sizeof(nanosat_message_t))
-                break;
-        }
-        nanosat_message_t* rmsg = (nanosat_message_t*)&_ibuf[0];
-        nano_datamsg_t* appmsg = (nano_datamsg_t*)&rmsg->data;
-        _user_onReceiveAppMsg(appmsg->buf, appmsg->len);
-    }
-}*/
 

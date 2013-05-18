@@ -135,41 +135,5 @@ int Byte2Long(long& resultValue, byte usrBytes[])
   }
   
   
-  //-----------------------------------------------------------
-  // Encode a Fletcher checksum in the last 2 bytes of buffer
-  //-----------------------------------------------------------
-  
-/*void fletcher_encode(byte buffer[], long count )
-{
-    int i;
-    unsigned char c0 = 0;
-    unsigned char c1 = 0;
-     *( buffer + count - 1 ) = 0;
-     *( buffer + count - 2 ) = 0;
-    for( i = 0; i < count; i++)
-    {
-    c0 = c0 + *( buffer + i );
-    c1 = c1 + c0;
-    }
-    *( buffer + count - 2 ) = c0 - c1;
-    *( buffer + count - 1 ) = c1 - 2*c0;
- }
- 
- //-------------------------------------------------------------
- // Decode Fletcher Checksum. Returns zero if buffer error-free
- //-------------------------------------------------------------
- 
-long fletcher_decode(byte buffer[], long count )
-{
-  long result = 0;
-  int i;
-  unsigned char c0 = 0;
-  unsigned char c1 = 0;
-  for( i = 0; i < count; i++)
-    {
-      c0 = c0 + *( buffer + i );
-      c1 = c1 + c0;
-    }
-  return((long)(c0 + c1)); // returns zero if buffer is error-free
-}*/
+
 
