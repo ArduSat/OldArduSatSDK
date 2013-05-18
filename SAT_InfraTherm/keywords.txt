@@ -1,0 +1,25 @@
+#######################################
+# Syntax Coloring Map for NanoSatisfi_MLX90614
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+NanoSatisfi_MLX90614    KEYWORD1
+
+factor			KEYWORD1
+tempData		KEYWORD1
+
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+rawTemperature  KEYWORD2
+getTemp		KEYWORD2
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+NS_MLX90614	LITERAL1
