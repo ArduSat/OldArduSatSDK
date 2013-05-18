@@ -149,7 +149,6 @@ class OnboardCommLayer{
          *      
          */
         void onReceive(void(*) (size_t, boolean), byte*, size_t, uint8_t);
-        //void onReceiveAppMsg(void(*) (int, byte*, size_t, byte);
 
         /**
          * Requests data from a given destination (slave).

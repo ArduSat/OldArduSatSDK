@@ -42,10 +42,6 @@ int Byte2Int(int &resultValue, byte usrBytes[]);
 int Long2Byte(long usrData, byte usrBytes[]);
 int Byte2Long(long &resultValue, byte usrBytes[]);
 
-/* Fletcher's checksum encode/decode */
-//void fletcher_encode(byte buffer[], long count );
-//long fletcher_decode(byte buffer[], long count );
-
 
   
   
