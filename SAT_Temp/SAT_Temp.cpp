@@ -59,7 +59,7 @@ void SAT_Temp::init(uint8_t nodeid){
 }
 
 float SAT_Temp::getTemp(){
-  Wire.requestFrom(_temp_i2c_addr,2);
+  Wire.requestFrom(_temp_i2c_addr, (uint8_t)2);
 
   byte MSB = Wire.read();
   byte LSB = Wire.read();

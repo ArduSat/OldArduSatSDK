@@ -1,5 +1,6 @@
-#include "SAT_Mag.h"
 #include <Wire.h>
+#include "SAT_Mag.h"
+#include "I2C_add.h"
 
 SAT_Mag mag;
 

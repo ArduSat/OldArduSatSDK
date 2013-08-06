@@ -1,7 +1,9 @@
 #include <Wire.h>
-#include <nanosat_message.h>
-#include <I2C_add.h>
+#include <EEPROM.h>
+#include "nanosat_message.h"
+#include "I2C_add.h"
 #include "SAT_Lum.h"
+#include "OnboardCommLayer.h"
 
 // Example for demonstrating the SAT_Lum library - public domain!
 

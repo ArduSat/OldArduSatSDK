@@ -1,6 +1,6 @@
 /* 
-    SAT_MLX90614.h - Library for Arduino returns data on temperature from
-    MLX90614 sensor
+    SAT_InfraTherm.h - Library for Arduino returns data on temperature from
+    InfraTherm sensor
     Copyright (C) 2012  Lara Booth for NanoSatisfi
 
     This program is free software: you can redistribute it and/or modify
@@ -17,27 +17,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ////////////////////////////////////////////////////////////////////////////////
           Notes:
-          Designed for use with Melexis (C) MLX90614 Infrared Thermometer
+          Designed for use with Melexis (C) InfraTherm Infrared Thermometer
 
           Library gathers temperature data over I2C Bus/SM Bus
 
-          Tested with MLX90614 from Sparkfun, 4.7k Ohm pull-up resistors, .1uF capacitor, and Arduino Uno
+          Tested with InfraTherm from Sparkfun, 4.7k Ohm pull-up resistors, .1uF capacitor, and Arduino Uno
 ////////////////////////////////////////////////////////////////////////////////
 */
 
-#ifndef SAT_MLX90614_H
-#define SAT_MLX90614_H
+#ifndef SAT_InfraTherm_H
+#define SAT_InfraTherm_H
 
-#define NS_MLX90614 0x5A //I2C address
+#define NS_InfraTherm 0x5A //I2C address
 
 #include <Arduino.h>
 #include <Wire.h>
 
-class SAT_MLX90614
+class SAT_InfraTherm
 {
   public:
   //constructor
-  SAT_MLX90614();
+  SAT_InfraTherm();
 
   //public methods
   float getTemp();
@@ -52,4 +52,4 @@ class SAT_MLX90614
   double tempData;
 };
 
-#endif /* SAT_MLX90614_H */
+#endif /* SAT_InfraTherm_H */

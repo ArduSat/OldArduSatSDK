@@ -17,12 +17,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "SAT_InfraTherm.h"
-#include <I2C_add.h>
-#include <nanosat_message.h>
 #include <Wire.h>
-#include <OnboardCommLayer.h>
-
+#include <EEPROM.h>
+#include "OnboardCommLayer.h"
+#include "nanosat_message.h"
+#include "I2C_add.h"
+#include "SAT_InfraTherm.h"
 
 SAT_InfraTherm mlx;
 

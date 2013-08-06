@@ -11,6 +11,7 @@ every 1s
 #include <Wire.h>
 #include <I2C_Conv.h>
 #include <I2C_add.h>
+#include <EEPROM.h>
 
 #include "SAT_Geiger.h"
 

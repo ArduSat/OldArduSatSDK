@@ -5,6 +5,7 @@
 #include <Wire.h>
 #include <I2C_add.h>
 #include "SAT_Temp.h"
+#include "nanosat_message.h"
 
 #define TEMP_PAYLOAD 0
 #define TEMP_BOTTOMPLATE 2

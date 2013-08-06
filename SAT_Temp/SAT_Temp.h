@@ -22,8 +22,7 @@
 #define TEMP_H
 
 #include <inttypes.h>
-
-#include <nanosat_message.h>
+#include <Arduino.h>
 
 class SAT_Temp{
   private:
