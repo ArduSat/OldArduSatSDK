@@ -41,6 +41,7 @@ class SAT_InfraTherm
 
   //public methods
   float getTemp();
+  int16_t getRawTemp();
 
   private:
 
@@ -50,6 +51,7 @@ class SAT_InfraTherm
   //global variable
   double factor;
   double tempData;
+  int16_t rawData;
 };
 
 #endif /* SAT_InfraTherm_H */
