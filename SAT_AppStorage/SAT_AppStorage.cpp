@@ -57,15 +57,21 @@ void SAT_AppStorage::send(char data[])
   copyAndSend((byte*) data, finalOffset, remainderLen);
 }
 
-void SAT_AppStorage::send(byte *data, unsigned int start, unsigned int end)
+void SAT_AppStorage::send(byte *data, unsigned int start, unsigned int length)
 {
-  for(unsigned int i = start; i < end; i++)
+  unsigned int dataLen  = (unsigned)(length);
+  unsigned int messages = dataLen / NODE_COMM_MAX_BUFFER_SIZE;
+
+  for(unsigned int i = 0; i < messages; i++)
   {
-    unsigned int remaning_bytes = end - i;
-    if (remaning_bytes > NODE_COMM_MAX_BUFFER_SIZE)
-      remaning_bytes = NODE_COMM_MAX_BUFFER_SIZE;
-    copyAndSend(data, i, remaning_bytes);
+    unsigned int start_offset   = i * NODE_COMM_MAX_BUFFER_SIZE;
+    copyAndSend((byte*) data, start+start_offset, NODE_COMM_MAX_BUFFER_SIZE);
   }
+  // process remainder or if data was less then NODE_COMM_MAX_BUFFER_SIZE;
+  uint8_t remainderLen = dataLen % NODE_COMM_MAX_BUFFER_SIZE;
+  uint8_t finalOffset  = (dataLen > NODE_COMM_MAX_BUFFER_SIZE) ?
+    (messages * NODE_COMM_MAX_BUFFER_SIZE) : 0;
+  copyAndSend((byte*) data, start+finalOffset, remainderLen);
 }
 
 void SAT_AppStorage::copyAndSend(
