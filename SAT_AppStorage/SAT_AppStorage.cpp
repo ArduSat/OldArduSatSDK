@@ -26,7 +26,8 @@
 /******************************************************************************
  * Constructors
  ******************************************************************************/
-SAT_AppStorage::SAT_AppStorage() {
+SAT_AppStorage::SAT_AppStorage()
+{
   commLayer_    = OnboardCommLayer();
   nodeAddress_  = EEPROM.read(0x00);
 }
@@ -40,22 +41,35 @@ SAT_AppStorage::SAT_AppStorage() {
 
    @note There is a 100ms delay to allow time for FS work.
 */
-void SAT_AppStorage::send(char data[]){
+void SAT_AppStorage::send(char data[])
+{
   unsigned int dataLen  = (unsigned)strlen(data);
   unsigned int messages = dataLen / NODE_COMM_MAX_BUFFER_SIZE;
-  for(unsigned int i = 0; i < messages; i++) {
+  for(unsigned int i = 0; i < messages; i++)
+  {
     unsigned int start_offset   = i * NODE_COMM_MAX_BUFFER_SIZE;
-    copyAndSend(data, start_offset, NODE_COMM_MAX_BUFFER_SIZE);
+    copyAndSend((byte*) data, start_offset, NODE_COMM_MAX_BUFFER_SIZE);
   }
   // process remainder or if data was less then NODE_COMM_MAX_BUFFER_SIZE;
   uint8_t remainderLen = dataLen % NODE_COMM_MAX_BUFFER_SIZE;
   uint8_t finalOffset  = (dataLen > NODE_COMM_MAX_BUFFER_SIZE) ?
     (messages * NODE_COMM_MAX_BUFFER_SIZE) : 0;
-  copyAndSend(data, finalOffset, remainderLen);
+  copyAndSend((byte*) data, finalOffset, remainderLen);
+}
+
+void SAT_AppStorage::send(byte *data, unsigned int start, unsigned int end)
+{
+  for(unsigned int i = start; i < end; i++)
+  {
+    unsigned int remaning_bytes = end - i;
+    if (remaning_bytes > NODE_COMM_MAX_BUFFER_SIZE)
+      remaning_bytes = NODE_COMM_MAX_BUFFER_SIZE;
+    copyAndSend(data, i, remaning_bytes);
+  }
 }
 
 void SAT_AppStorage::copyAndSend(
-  char data[], unsigned int offset, unsigned int length)
+  byte data[], unsigned int offset, unsigned int length)
 {
   nanosat_message_t msg;
   msg.node_addr = nodeAddress_;

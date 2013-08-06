@@ -14,9 +14,10 @@
 
 #include <inttypes.h>
 #include <stdlib.h>
+#include <Arduino.h>
 
-#include <nanosat_message.h>
-#include <OnboardCommLayer.h>
+#include "nanosat_message.h"
+#include "OnboardCommLayer.h"
 
 class SAT_AppStorage
 {
@@ -32,7 +33,7 @@ class SAT_AppStorage
      * @param offset  starting offset.
      * @param length  how many bytes to be copied.
      */
-    void copyAndSend(char data[], unsigned int offset, unsigned int length);
+    void copyAndSend(byte data[], unsigned int offset, unsigned int length);
   public:
     /*
      * Constructor
@@ -48,6 +49,7 @@ class SAT_AppStorage
      *   retreival by ground station.
      */
     void send(char data[]);
+    void send(byte *data, unsigned int start, unsigned int end);
 
 };
 
