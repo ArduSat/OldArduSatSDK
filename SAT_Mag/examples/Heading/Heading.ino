@@ -1,15 +1,16 @@
+#include <SAT_Mag.h>
+#include <I2C_add.h>
 #include <Wire.h>
-#include "SAT_Mag.h"
-#include "I2C_add.h"
+#include <I2CComm.h>
 
 SAT_Mag mag;
 
 
 void setup()
 {
-  Wire.begin();        // join i2c bus (address optional for master)
+  I2CComm.begin();
   Serial.begin(9600);  // start serial for output (fast)
-  mag.configMag();          // turn the MAG3110 on
+  mag.configMag();         // turn the MAG3110 on
 }
 
 

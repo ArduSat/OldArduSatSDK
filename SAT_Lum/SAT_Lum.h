@@ -49,7 +49,7 @@
 // 3 i2c address options!
 #define SAT_Lum_ADDR_LOW  0x29
 #define SAT_Lum_ADDR_FLOAT 0x39
-#define SAT_Lum_ADDR_HIGH 0x49
+#define SAT_Lum_ADDR_HIGH 0x49		// jfomhover on 07/08/2013 : what's this one ? it isn't in I2D_add.h
 
 // Lux calculations differ slightly for CS package
 //#define SAT_Lum_PACKAGE_CS
@@ -159,22 +159,22 @@ tsl2561Gain_t;
 class SAT_Lum {
  public:
  /**Constructor that has a single ID parameter.
-			@param addr - The address of the luminousity sensor.
+			@param id - The id of the luminousity sensor in the ArduSat
   */
-  SAT_Lum(uint8_t addr);
+  SAT_Lum(uint8_t id);
   
   /**Initializes the luminousity sensor.
 			@param nodeid - The id of the user's arduino on the ArduSat. This allows 
 			the supervisor to know which arduino node to send the data back to. 
 			The id is assigned by NanoSatisfi.
   */
-  boolean begin(uint8_t nodeid);
+  boolean begin(); // jfomhover on 07/08/2013 : argument (uint8_t nodeid) is not used in the function (and probably shouldn't)
   
   void enable(void);
   
   void disable(void);
   
-  void write8(uint8_t r, uint8_t v);
+  int8_t write8(uint8_t r, uint8_t v); // the return value is for handling errors
   uint16_t read16(uint8_t reg);
 
   /**Calculates the Lux on the light sensor. */
@@ -204,7 +204,7 @@ class SAT_Lum {
   boolean _initialized;
 
   //init
-  uint8_t _buff[2];
-  uint8_t _local_address;
+  uint8_t _buff[2]; // jfomhover on 07/08/2013 : finally using that to send commands
+  // uint8_t _local_address; // jfomhover on 07/08/2013 : is never set in the code, but used in each function
 };
 #endif
