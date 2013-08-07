@@ -57,7 +57,8 @@ void SAT_InfraTherm::rawTemperature(unsigned char r)
   // This masks off the error bit of the high byte,
   // then moves it left 8 bits and adds the low byte.
   // Taken from bildr forum on InfraTherm
-  tempData =(double)(((data_high & 0x007F) << 8) + data_low);
+  rawData = (((data_high & 0x007F) << 8) + data_low);
+  tempData =(double)(rawData);
   //multiply by resolution and account for error to convert to Kelvin
   tempData = (tempData * factor)-0.01;
 }
@@ -67,4 +68,10 @@ float SAT_InfraTherm::getTemp()
 {
   rawTemperature(0x07); //modify tempData
   return (float) tempData - 273.15; //convert from Kelvin to Celsius
+}
+
+int16_t SAT_InfraTherm::getRawTemp()
+{
+  rawTemperature(0x07); //modify tempData+rawData
+  return(rawData);
 }

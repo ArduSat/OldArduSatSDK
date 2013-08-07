@@ -49,7 +49,7 @@ class SAT_AppStorage
      *   retreival by ground station.
      */
     void send(char data[]);
-    void send(byte *data, unsigned int start, unsigned int end);
+    void send(byte *data, unsigned int start, unsigned int length);
 
 };
 

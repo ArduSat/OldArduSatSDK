@@ -70,3 +70,14 @@ float SAT_Temp::getTemp(){
   float celsius = TemperatureSum*0.0625;
   return celsius;
 }
+
+int16_t SAT_Temp::getRawTemp() {
+  Wire.requestFrom(_temp_i2c_addr, (uint8_t)2);
+
+  byte MSB = Wire.read();
+  byte LSB = Wire.read();
+
+  //it's a 12bit int, using two's compliment for negative
+  int16_t TemperatureSum = ((MSB << 8) | LSB) >> 4; 
+  return(TemperatureSum);
+}

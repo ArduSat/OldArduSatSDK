@@ -45,6 +45,7 @@ class SAT_Temp{
     void init(uint8_t nodeid);
     /**Returns the tempurature in Celsius from the sensor. */
     float getTemp();    //returns temperature in celcius
+    int16_t getRawTemp(); // returns the raw value from the sensor (12bits)
 };
 
 #endif /* TEMP_H */
