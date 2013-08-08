@@ -29,9 +29,8 @@ http://dlnmh9ip6v2uc.cloudfront.net/datasheets/BreakoutBoards/Mag3110_v10.pde
 */
 
 #include "SAT_Mag.h"
-#include "../I2C_add/I2C_add.h" // TODO : still not including from the IDE, seems related to the way the IDE is compiling
-#include "../I2CComm/I2CComm.h" // jfomhover on 07/08/2013 : "../" is the only way for not having to include Wire previously in the experiment sketch
-								// but considering the way the IDE works, you HAVE to include <I2CComm.h> in your sketch for SAT_Mag to compile
+#include <I2C_add.h>
+#include <I2CComm.h>
 
 //Constructor 
 SAT_Mag::SAT_Mag()

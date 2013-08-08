@@ -29,7 +29,7 @@
 #define SAT_MAG_H
 
 #include <Arduino.h>
-#include "../I2CComm/I2CComm.h" // jfomhover on 07/08/2013 : "../" is the only way for not having to include Wire previously in the experiment sketch
+#include <I2CComm.h>
 
 class SAT_Mag
 {

@@ -22,10 +22,10 @@
 #include "I2CComm.h"
 
 #ifdef I2CCOMM_NODE
-#include "../EEPROM/EEPROM.h"
+#include <EEPROM.h>
 #endif
 
-#include "../Wire/Wire.h"	// TODO : still not including from the IDE, seems related to the way the IDE is compiling
+#include <Wire.h>	// TODO : still not including from the IDE, seems related to the way the IDE is compiling
 
 /* (RECALL)
  * private:

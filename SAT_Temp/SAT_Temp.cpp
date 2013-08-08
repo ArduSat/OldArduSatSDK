@@ -23,7 +23,7 @@
 #include <Arduino.h>
 #include "SAT_Temp.h"
 #include <Wire.h>
-#include "../I2CComm/I2CComm.h" // TODO : still not including from the IDE, seems related to the way the IDE is compiling
+#include <I2CComm.h>
 
 /******************************************************************************
  * Definitions

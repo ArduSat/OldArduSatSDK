@@ -40,7 +40,7 @@
 #include <Wire.h>
 #include "SAT_Lum.h"
 #include <I2C_add.h>
-#include "../I2CComm/I2CComm.h"
+#include <I2CComm.h>
 
 SAT_Lum::SAT_Lum(uint8_t id) {
 //  _addr = id; // jfomhover on 07/08/2013 : commented cause not used
