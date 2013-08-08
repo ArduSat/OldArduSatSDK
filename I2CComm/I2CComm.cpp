@@ -1,7 +1,7 @@
 /*
 	file : I2C_CommManager.cpp
 
-    @author : Jean-François Omhover
+    @author : Jean-FranÃ§ois Omhover
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -242,7 +242,7 @@ int8_t I2C_CommManager::request16bitsFromREG(uint8_t sourceAddr,
 
 	int8_t t_ret = 0;
 	transmitByte(sourceAddr, reg);
-//	delayMicroseconds(2); //needs at least 1.3us free time between start and stop
+	delayMicroseconds(2); //needs at least 1.3us free time between start and stop
 	t_ret = request16bits(sourceAddr, receivedIntPtr, order, timeout);
 	return(t_ret);
 }

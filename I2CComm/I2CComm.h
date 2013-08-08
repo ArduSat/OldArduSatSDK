@@ -2,7 +2,7 @@
 	file : I2C_CommManager.h
 	content : 	class that handles a robust communication via the arduino Wire / I2C library
 				error codes are made accessible, and let you handle them properly
-    @author : Jean-François Omhover
+    @author : Jean-FranÃ§ois Omhover
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
