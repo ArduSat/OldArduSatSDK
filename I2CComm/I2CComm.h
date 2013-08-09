@@ -49,6 +49,7 @@ class I2C_CommManager {
 #define I2C_COMM_ERRORTOOMUCHDATA	-4	// data given to the transmission exceeds the internal buffer
 #define I2C_COMM_ERRORNACKADDR		-5	// typical return value when there's no OnboardCommLayer listening / connected
 #define I2C_COMM_ERRORNACKDATA		-6	// ???
+#define I2C_COMM_NOTENOUGHDATA		-7	// received less data than expected
 
 	// sends the whole buffer of values to destinationAddr,
     // and if the sending fails (you never know), try again until if works or timeout reached
@@ -77,6 +78,13 @@ class I2C_CommManager {
     int8_t requestByte(uint8_t sourceAddr,
     				uint8_t * receivedBytePtr,		// a pointer to the byte that will be filled by the received value
     				int timeout = I2C_COMM_INSTANTTIMEOUT);		// timeout value (instantaneous by default)
+
+    // calls on the sourceAddr and request a byte array
+    int8_t requestByteArray(uint8_t sourceAddr,
+							byte * recBuffer,			// byte buffer for the received values
+							uint8_t expectedLen,			// length of the expected data array
+							uint8_t * receivedLen,			// where to put the length actually received
+							int timeout);				// timeout value (instantaneous by default)
 
     // calls on the sourceAddr and request 2 bytes
     int8_t request16bits(uint8_t sourceAddr,

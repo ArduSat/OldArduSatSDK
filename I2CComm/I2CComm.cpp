@@ -26,6 +26,7 @@
 #endif
 
 #include <Wire.h>	// TODO : still not including from the IDE, seems related to the way the IDE is compiling
+#define ARDUINO	105
 
 /* (RECALL)
  * private:
@@ -167,6 +168,35 @@ int8_t I2C_CommManager::requestByte(uint8_t sourceAddr, uint8_t * receivedBytePt
 
 	*receivedBytePtr = Wire.read();
 	return(1);
+}
+
+// calls on the sourceAddr and request a byte array
+int8_t I2C_CommManager::requestByteArray(uint8_t sourceAddr,
+				byte * recBuffer,			// byte buffer for the received values
+				uint8_t expectedLen,			// length of the expected data array
+				uint8_t * receivedLen,			// where to put the length actually received
+				int timeout)				// timeout value (instantaneous by default)
+{
+	Wire.beginTransmission(sourceAddr);
+	Wire.requestFrom((byte)sourceAddr, (byte)expectedLen);
+
+	// reading data loop
+
+	uint8_t obtainedData = 0;
+
+	while(Wire.available())
+	{
+		recBuffer[obtainedData++] = Wire.read();
+	}
+
+	int8_t t_ret = Wire.endTransmission();         // end transmission
+
+    receivedLen[0] = obtainedData;
+
+	if (obtainedData < expectedLen)
+		return(I2C_COMM_NOTENOUGHDATA);
+
+	return(endTransmissionErrorCode(t_ret, obtainedData));
 }
 
 // calls on the sourceAddr and request 2 bytes
