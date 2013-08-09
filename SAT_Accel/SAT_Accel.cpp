@@ -47,10 +47,10 @@ void SAT_Accel::powerOn() {
 }
 
 // Reads the acceleration into three variable x, y and z
-void SAT_Accel::readAccel(int *xyz){
+void SAT_Accel::readAccel(int16_t *xyz){	// jfomhover 08/09/2013 : specified type
   readAccel(xyz, xyz + 1, xyz + 2);
 }
-void SAT_Accel::readAccel(int *x, int *y, int *z) {
+void SAT_Accel::readAccel(int16_t *x, int16_t *y, int16_t *z) {	// jfomhover 08/09/2013 : specified type
   readFrom(ADXL345_DATAX0, TO_READ, _buff); //read the acceleration data from the ADXL345
 
   // each axis reading comes in 10 bit resolution, ie 2 bytes.  Least Significat Byte first!!
@@ -62,7 +62,7 @@ void SAT_Accel::readAccel(int *x, int *y, int *z) {
 
 void SAT_Accel::get_Gxyz(double *xyz){
   int i;
-  int xyz_int[3];
+  int16_t xyz_int[3];
   readAccel(xyz_int);
   for(i=0; i<3; i++){
     xyz[i] = xyz_int[i] * gains[i];

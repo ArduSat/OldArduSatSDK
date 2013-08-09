@@ -37,6 +37,7 @@ class I2C_CommManager {
 
 
     boolean begin(uint8_t localAddr = I2C_COMM_BEGINASMASTER);		// by default, begin as master of the I2C bus
+    void flush();		// flush the Wire (needed in geiger_sensor_poller.ino, dunno why)
 
 #define I2C_COMM_BLOCKTIMEOUT	-1	// use that to block read functions until the full expected data is received
 #define I2C_COMM_INSTANTTIMEOUT	0	// by default, don't wait, data is available or die !
@@ -65,8 +66,15 @@ class I2C_CommManager {
     					int timeout = I2C_COMM_INSTANTTIMEOUT);	// timeout value (instantaneous by default)
 
     // sends a byte to the destination address
+    // left for compatibility reasons
     int8_t transmitByte(uint8_t destinationAddr,
     				 uint8_t content);
+
+    // sends a byte to the destination address,
+    // has a "restart" boolean for endTransmission() to send a restart message after transmission
+    int8_t transmitByte(uint8_t destinationAddr,
+    				 uint8_t content,
+    				 boolean restart);
 
     // transmits bytes independently, byte by byte, via Wire.write()
     int8_t transmitByteArray(uint8_t destinationAddr,
@@ -84,7 +92,7 @@ class I2C_CommManager {
 							byte * recBuffer,			// byte buffer for the received values
 							uint8_t expectedLen,			// length of the expected data array
 							uint8_t * receivedLen,			// where to put the length actually received
-							int timeout);				// timeout value (instantaneous by default)
+							int timeout = I2C_COMM_INSTANTTIMEOUT);				// timeout value (instantaneous by default)
 
     // calls on the sourceAddr and request 2 bytes
     int8_t request16bits(uint8_t sourceAddr,

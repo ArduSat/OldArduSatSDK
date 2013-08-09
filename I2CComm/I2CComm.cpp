@@ -71,6 +71,13 @@ boolean I2C_CommManager::begin(uint8_t localAddr) {
 	return(hasBegun_);
 };
 
+// flush the Wire (needed in geiger_sensor_poller.ino, dunno why)
+void I2C_CommManager::flush()
+{
+	while(Wire.available())
+		Wire.read();
+}
+
 // sends the whole buffer of values to destinationAddr,
 // and if the sending fails (you never know), try again until if works or timeout reached
 int8_t I2C_CommManager::sendBuffer(uint8_t destinationAddr,
@@ -117,6 +124,23 @@ int8_t I2C_CommManager::transmitByte(uint8_t destinationAddr,  uint8_t content) 
 	return(endTransmissionErrorCode(t_ret, 1));
 }
 
+// sends a byte to the destination address,
+// has a "restart" boolean for endTransmission() to send a restart message after transmission
+int8_t I2C_CommManager::transmitByte(uint8_t destinationAddr,
+				 uint8_t content,
+				 boolean restart) {
+	Wire.beginTransmission(destinationAddr);
+#if ARDUINO >= 100
+	if (Wire.write(content) < 1)
+		return(I2C_COMM_ERRORNOWRITE);
+#else
+	if (Wire.send(content) < 1)
+		return(I2C_COMM_ERRORNOWRITE);
+#endif
+	byte t_ret = Wire.endTransmission(restart);
+	return(endTransmissionErrorCode(t_ret, 1));
+}
+
 // transmits bytes independently, byte by byte, via Wire.write()
 int8_t I2C_CommManager::transmitByteArray(uint8_t destinationAddr,
 				  	  	  	  	  	  	  uint8_t * array,
@@ -160,7 +184,7 @@ int8_t I2C_CommManager::requestByte(uint8_t sourceAddr, uint8_t * receivedBytePt
 
 		while ((Wire.available() < 1)) {
 			currentTime = millis() - startingTime;
-			if (currentTime > timeout)
+			if (currentTime > (unsigned long int)timeout) // jfomhover 08/09/2013 : not so sure about types
 				return(I2C_COMM_ERRORTIMEOUT);
 		};
 
@@ -219,7 +243,7 @@ int8_t I2C_CommManager::request16bits(uint8_t sourceAddr,
 
 		while ((Wire.available() < 2)) {
 			currentTime = millis() - startingTime;
-			if (currentTime > timeout)
+			if (currentTime > (unsigned long int)timeout) // jfomhover 08/09/2013 : not so sure about types
 				return(I2C_COMM_ERRORTIMEOUT);
 		};
 

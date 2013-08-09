@@ -108,8 +108,8 @@ public:
 
   SAT_Accel();			// jfomhover 08/09/2013 : modified for ArduSat
   void powerOn();
-  void readAccel(int* xyx);
-  void readAccel(int* x, int* y, int* z);
+  void readAccel(int16_t* xyx);	// jfomhover 08/09/2013 : specified type
+  void readAccel(int16_t* x, int16_t* y, int16_t* z);	// jfomhover 08/09/2013 : specified type
   void get_Gxyz(double *xyz);
 
   void setTapThreshold(int tapThreshold);
