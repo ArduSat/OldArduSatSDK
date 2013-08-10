@@ -26,7 +26,6 @@
 #endif
 
 #include <Wire.h>	// TODO : still not including from the IDE, seems related to the way the IDE is compiling
-#define ARDUINO	105
 
 /* (RECALL)
  * private:
