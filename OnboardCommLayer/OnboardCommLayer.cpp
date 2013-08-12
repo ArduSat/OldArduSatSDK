@@ -22,6 +22,7 @@
 #include "I2C_add.h"
 #include <EEPROM.h>
 #include <Wire.h>
+#include <I2CComm.h>
 
 static uint8_t transmitBuffer[sizeof(nanosat_message_t)];
 
@@ -31,11 +32,13 @@ OnboardCommLayer::OnboardCommLayer() {
 }
 
 uint8_t OnboardCommLayer::sendMessage(nanosat_message_t msg) {
-  memcpy(transmitBuffer, &msg, sizeof(nanosat_message_t));
-  Wire.begin(nodeAddress_); 				// jfomhover on 07/08/2013 : join the I2C bus as a slave with its node address in the Sat
-  Wire.beginTransmission(assvAddress_);		// transmit to the master arduino in the Sat
-  Wire.write(transmitBuffer, sizeof(nanosat_message_t));
-  Wire.endTransmission();
+  memcpy(transmitBuffer, &msg, sizeof(nanosat_message_t)); // jfomhover on 2013/08/12 : is this necessary since we're not multitasking ?
+  I2CComm.transmitByteArray(assvAddress_,transmitBuffer,sizeof(nanosat_message_t),I2C_COMM_INSTANTTIMEOUT);
+  I2CComm.flushWrite();
+//  Wire.begin(nodeAddress_); 				// jfomhover on 07/08/2013 : join the I2C bus as a slave with its node address in the Sat
+//  Wire.beginTransmission(assvAddress_);		// transmit to the master arduino in the Sat
+//  Wire.write(transmitBuffer, sizeof(nanosat_message_t));
+//  Wire.endTransmission();
 }
 
 uint8_t OnboardCommLayer::sendExit() {

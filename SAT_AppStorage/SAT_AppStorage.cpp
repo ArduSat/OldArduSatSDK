@@ -84,5 +84,5 @@ void SAT_AppStorage::copyAndSend(
   msg.type      = APPEND;
   memcpy(msg.buf, (uint8_t*)&(data[offset]), length * sizeof(char));
   commLayer_.sendMessage(msg);
-  delay(100);
+  delay(100); // jfomhover on 08/12/2013 : wouldn't it be better to flush the wire on commLayer_ instead of introducing delay ?
 }

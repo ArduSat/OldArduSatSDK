@@ -44,7 +44,8 @@ void setup(){
 
 void loop(){  
   //flush I2C buffer
-  I2CComm.flush();
+  I2CComm.flushWrite();
+  I2CComm.flushRead();
   
   //---------//
   // TUBE 1  //

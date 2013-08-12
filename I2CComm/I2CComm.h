@@ -38,7 +38,8 @@ class I2C_CommManager {
 
     boolean begin(uint8_t localAddr = I2C_COMM_BEGINASMASTER);		// by default, begin as master of the I2C bus
     uint8_t getAddress();
-    void flush();		// flush the Wire (needed in geiger_sensor_poller.ino, dunno why)
+    void flushWrite();		// flush the write buffer of the Wire
+    void flushRead();		// flush the read buffer of the Wire (needed in geiger_sensor_poller.ino, dunno why)
 
 #define I2C_COMM_BLOCKTIMEOUT	-1	// use that to block read functions until the full expected data is received
 #define I2C_COMM_INSTANTTIMEOUT	0	// by default, don't wait, data is available or die !

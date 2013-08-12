@@ -77,7 +77,13 @@ uint8_t I2C_CommManager::getAddress()
 }
 
 // flush the Wire (needed in geiger_sensor_poller.ino, dunno why)
-void I2C_CommManager::flush()
+void I2C_CommManager::flushWrite()
+{
+	Wire.flush();
+}
+
+// flush the Wire (needed in geiger_sensor_poller.ino, dunno why)
+void I2C_CommManager::flushRead()
 {
 	while(Wire.available())
 		Wire.read();
