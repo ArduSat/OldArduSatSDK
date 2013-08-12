@@ -21,7 +21,7 @@
 
 #include "I2CComm.h"
 
-#ifdef I2CCOMM_NODE
+#ifdef I2CCOMM_REALNODE
 #include <EEPROM.h>
 #endif
 
@@ -55,7 +55,7 @@ boolean I2C_CommManager::begin(uint8_t localAddr) {
 	if (hasBegun_)
 		return(true); // if is already begun, don't do it again (aren't you supposed not to ?)
 
-#ifdef I2CCOMM_NODE
+#ifdef I2CCOMM_REALNODE
 	localAddress_ = EEPROM.read(0x00);
 #else
 	localAddress_ = localAddr;
@@ -69,6 +69,12 @@ boolean I2C_CommManager::begin(uint8_t localAddr) {
 	hasBegun_ = true;
 	return(hasBegun_);
 };
+
+// returns the local address
+uint8_t I2C_CommManager::getAddress()
+{
+	return(localAddress_);
+}
 
 // flush the Wire (needed in geiger_sensor_poller.ino, dunno why)
 void I2C_CommManager::flush()

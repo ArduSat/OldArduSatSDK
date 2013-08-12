@@ -22,7 +22,7 @@
 #define I2CComm_h_ 
 
 // uncomment the #define below to activate the reading of localAddress_ in EEPROM / 0x00
-//#define I2CCOMM_NODE
+#define I2CCOMM_REALNODE
 
 class I2C_CommManager {
   private:
@@ -37,6 +37,7 @@ class I2C_CommManager {
 
 
     boolean begin(uint8_t localAddr = I2C_COMM_BEGINASMASTER);		// by default, begin as master of the I2C bus
+    uint8_t getAddress();
     void flush();		// flush the Wire (needed in geiger_sensor_poller.ino, dunno why)
 
 #define I2C_COMM_BLOCKTIMEOUT	-1	// use that to block read functions until the full expected data is received
