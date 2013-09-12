@@ -5,6 +5,7 @@
 
 OnboardCommLayer ocl;
 uint8_t nodeAddress;
+bool    halted;
 
 void setup()
 {
@@ -13,17 +14,24 @@ void setup()
     ocl         = OnboardCommLayer();
     nodeAddress = EEPROM.read(0x00);
     Serial.println("Initialized Serial and I2C buses");
+    halted = false;
 }
 
 void loop()
 {
-    nanosat_message_t msg;
-    msg.node_addr = nodeAddress;
-    msg.prefix    = NODE_COMM_MESSAGE_PREFIX;
-    msg.len       = length;
-    msg.type      = CAM;
-    commLayer_.sendMessage(msg);
-    delay(1000);
-    ocl.sendExit();
-    delay(1000);
+    if(!halted) {
+        nanosat_message_t msg;
+        msg.node_addr = nodeAddress;
+        msg.prefix    = NODE_COMM_MESSAGE_PREFIX;
+        msg.len       = length;
+        msg.type      = CAM;
+        ocl.sendMessage(msg);
+        delay(1000);
+        ocl.sendExit();
+        delay(1000);
+        halted = true;
+    }
+    else {
+        // do nothing
+    }
 }
