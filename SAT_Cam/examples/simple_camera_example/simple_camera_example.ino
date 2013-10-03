@@ -1,4 +1,5 @@
 #include <Wire.h>
+#include <EEPROM.h>
 #include "I2C_add.h"
 #include "OnboardCommLayer.h"
 #include "nanosat_message.h"
@@ -9,12 +10,12 @@ bool    halted;
 
 void setup()
 {
-    Serial.being(115200);
+    Serial.begin(115200);
     Wire.begin();
+    halted      = false;
     ocl         = OnboardCommLayer();
     nodeAddress = EEPROM.read(0x00);
-    Serial.println("Initialized Serial and I2C buses");
-    halted = false;
+    Serial.println("Initialized Serial and I2C bus");
 }
 
 void loop()
@@ -23,15 +24,11 @@ void loop()
         nanosat_message_t msg;
         msg.node_addr = nodeAddress;
         msg.prefix    = NODE_COMM_MESSAGE_PREFIX;
-        msg.len       = length;
         msg.type      = CAM;
         ocl.sendMessage(msg);
         delay(1000);
         ocl.sendExit();
         delay(1000);
         halted = true;
-    }
-    else {
-        // do nothing
     }
 }
