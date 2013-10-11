@@ -24,7 +24,6 @@
 #include <string.h>
 #include <I2C_add.h>
 #include "SAT_Spectro.h"
-#include <nanosat_message.h>
 
 /******************************************************************************
 * Initialize Class Variables
@@ -40,7 +39,7 @@
  ******************************************************************************/
 SAT_Spectro::SAT_Spectro(uint8_t id){
     _local_address = id;
-    //commLayer = new OnboardCommLayer(MULTIMASTER, _local_address);
+    commLayer = new OnboardCommLayer(MULTIMASTER, _local_address);
 
     //register the sensor (power related)
     nanosat_message_t msg;
@@ -51,7 +50,7 @@ SAT_Spectro::SAT_Spectro(uint8_t id){
     msg.len = 1;
     uint8_t* _data = (uint8_t*)&msg.data;
     _data[0] = I2C_ADD_SPECT;
-    //commLayer->send(&msg);
+    commLayer->send(&msg);
 
 }
 
