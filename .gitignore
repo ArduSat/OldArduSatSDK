@@ -1,0 +1,9 @@
+~*
+*~
+*.swp
+*.bck
+*.DS_Store
+test_*
+__MACOSX
+/*/*/.build
+/*/*/lib
