@@ -1,6 +1,7 @@
 #include <Wire.h>
 #include <SAT_Accel.h>
-#include <I2CComm.h>
+#include <EEPROM.h>
+#include <OnboardCommLayer.h>
 
 /************************************************************************
  * Arduino driver test for ADXL345 3-axes accelerometer                 *
@@ -42,7 +43,6 @@ void setup(void){
   double xyz[3], gains[3], gains_orig[3];
 
   Serial.begin(57600);
-  I2CComm.begin();
   
   Serial.println("powerOn...");
   accel.powerOn();

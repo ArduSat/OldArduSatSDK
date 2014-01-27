@@ -28,7 +28,7 @@
  ******************************************************************************/
 SAT_AppStorage::SAT_AppStorage()
 {
-  commLayer_    = OnboardCommLayer();
+  commLayer_    = OBCL;
   nodeAddress_  = EEPROM.read(0x00);
 }
 

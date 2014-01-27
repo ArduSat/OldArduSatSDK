@@ -28,7 +28,7 @@
 */
 
 #include "SAT_InfraTherm.h"
-#include <I2CComm.h>
+#include <OnboardCommLayer.h>	// for OBCL
 
 //constructor
 SAT_InfraTherm::SAT_InfraTherm(){
@@ -43,10 +43,10 @@ void SAT_InfraTherm::rawTemperature(unsigned char r)
   int8_t data_t[3];
 //  int data_low, data_high, pec;
 
-  I2CComm.transmitByte(NS_InfraTherm,r,0);	//repeated start
+  OBCL.transmitByte(NS_InfraTherm,r,0);	//repeated start
 
   uint8_t recdSize = 0;
-  int8_t t_ret = I2CComm.requestByteArray(NS_InfraTherm, (byte*)data_t, 3, &recdSize);
+  int8_t t_ret = OBCL.requestByteArray(NS_InfraTherm, (byte*)data_t, 3, &recdSize);
 
 // TODO : what to do here if errors ?
   if (t_ret < 0)

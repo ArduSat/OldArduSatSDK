@@ -8,7 +8,8 @@
 #include <Arduino.h>
 #include <I2C_add.h>
 #include <Wire.h>
-#include <I2CComm.h>
+#include <EEPROM.h>
+#include <OnboardCommLayer.h>
 #include <SAT_Gyro.h>
 
 SAT_Gyro gyro;
@@ -17,7 +18,7 @@ int ix, iy, iz;
 
 void setup(void) {
   Serial.begin(115200);
-  I2CComm.begin();   // if experiencing gyro problems/crashes while reading XYZ values
+  OBCL.begin();   // if experiencing gyro problems/crashes while reading XYZ values
                      // please read class constructor comments for further info.
   delay(1000);
   // Use ITG3200_ADDR_AD0_HIGH or ITG3200_ADDR_AD0_LOW as the ITG3200 address 

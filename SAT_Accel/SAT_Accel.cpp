@@ -24,7 +24,7 @@
 //#endif
 
 #include "SAT_Accel.h"	// jfomhover 08/09/2013 : modified for ArduSat
-#include <I2CComm.h>	// jfomhover 08/09/2013 : modified for ArduSat
+#include <OnboardCommLayer.h>	// for OBCL
 
 #define DEVICE (0x53)    // ADXL345 device address
 #define TO_READ (6)      // num of bytes we are going to read each time (two bytes for each axis)
@@ -40,10 +40,11 @@ SAT_Accel::SAT_Accel() {
 
 void SAT_Accel::powerOn() {
 //  Wire.begin();        // jfomhover 08/09/2013 : modified for ArduSat
+	OBCL.begin();
 //Turning on the ADXL345
-  writeTo(ADXL345_POWER_CTL, 0);
-  writeTo(ADXL345_POWER_CTL, 16);
-  writeTo(ADXL345_POWER_CTL, 8);
+	writeTo(ADXL345_POWER_CTL, 0);
+	writeTo(ADXL345_POWER_CTL, 16);
+	writeTo(ADXL345_POWER_CTL, 8);
 }
 
 // Reads the acceleration into three variable x, y and z
@@ -73,16 +74,16 @@ void SAT_Accel::get_Gxyz(double *xyz){
 void SAT_Accel::writeTo(byte address, byte val) {
 	_buff[0] = address;
 	_buff[1] = val;
-	I2CComm.transmitByteArray(DEVICE,_buff,2,I2C_COMM_INSTANTTIMEOUT);	// jfomhover 08/09/2013 : modified for ArduSat
+	OBCL.transmitByteArray(DEVICE,_buff,2,I2C_COMM_INSTANTTIMEOUT);	// jfomhover 08/09/2013 : modified for ArduSat
 //	delayMicroseconds(2);
 }
 
 // Reads num bytes starting from address register on device in to _buff array
 void SAT_Accel::readFrom(byte address, int num, byte _buff[]) {
-	I2CComm.transmitByte(DEVICE,address);
+	OBCL.transmitByte(DEVICE,address);
 	delayMicroseconds(2);
 	uint8_t recSize = 0;	// where the length of received data is stored
-	int8_t t_ret = I2CComm.requestByteArray((uint8_t)DEVICE,(byte*)_buff,(uint8_t)num,&recSize,100);
+	int8_t t_ret = OBCL.requestByteArray((uint8_t)DEVICE,(byte*)_buff,(uint8_t)num,&recSize,100);
 
 	if (t_ret == I2C_COMM_OK)
 		return;

@@ -1,6 +1,7 @@
 #include "SAT_Accel.h"
 #include <Wire.h>
-#include <I2CComm.h>
+#include <EEPROM.h>
+#include <OnboardCommLayer.h>
 
 SAT_Accel accel;
 int x, y, z;
@@ -8,7 +9,6 @@ double g;
 
 void setup() {
   Serial.begin(9600);
-  I2CComm.begin();
   accel.powerOn();
 }
 

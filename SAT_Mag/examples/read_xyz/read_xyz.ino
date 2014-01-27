@@ -16,17 +16,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <SAT_Mag.h>
-#include <I2C_add.h>
 #include <Wire.h>
-#include <I2CComm.h>
+#include <EEPROM.h>
+#include <OnboardCommLayer.h>
+#include <SAT_Mag.h>
+
 
 SAT_Mag mag;
 
 
 void setup()
 {
-  I2CComm.begin();
+  OBCL.begin();
   Serial.begin(9600);  // start serial for output (fast)
   mag.configMag();          // turn the MAG3110 on
 }

@@ -13,7 +13,7 @@
 #include <Wire.h>
 #include <EEPROM.h>
 #include "SAT_Geiger.h"
-#include <I2CComm.h>
+#include <OnboardCommLayer.h>	// for OBCL
 
 SAT_Geiger::SAT_Geiger(){
   //_local_address = EEPROM.read(0x00); // jfomhover 08/09/2013 : that's not for the sensor to do
@@ -32,7 +32,7 @@ long SAT_Geiger::getCPM(byte tube_handle){
 
   // set status reg to CPM1
   //send(&stat_reg, 1);
-  I2CComm.transmitByte(I2C_ADD_GEIGER, stat_reg);
+  OBCL.transmitByte(I2C_ADD_GEIGER, stat_reg);
   // TODO: what to do if I2Ccomm returns negative value ?
 
   // wait for measurement
@@ -41,7 +41,7 @@ long SAT_Geiger::getCPM(byte tube_handle){
   // get data
   //receive(buffer, BUF_SIZE);
   uint8_t recdLen = 0;
-  I2CComm.requestByteArray(I2C_ADD_GEIGER, buffer, BUF_SIZE, &recdLen);
+  OBCL.requestByteArray(I2C_ADD_GEIGER, buffer, BUF_SIZE, &recdLen);
   // TODO: what to do if I2Ccomm returns negative value ?
 
   // convert bytes to value
@@ -64,7 +64,7 @@ float SAT_Geiger::getUSPH(byte tube_handle){
 
   // set status reg to CPM1
   //  send(&stat_reg, 1);
-  I2CComm.transmitByte(I2C_ADD_GEIGER, stat_reg);
+  OBCL.transmitByte(I2C_ADD_GEIGER, stat_reg);
   // TODO: what to do if I2Ccomm returns negative value ?
 
   // wait for measurement
@@ -73,7 +73,7 @@ float SAT_Geiger::getUSPH(byte tube_handle){
   // get data
   //receive(buffer, BUF_SIZE);
   uint8_t recdLen = 0;
-  I2CComm.requestByteArray(I2C_ADD_GEIGER, buffer, BUF_SIZE, &recdLen);
+  OBCL.requestByteArray(I2C_ADD_GEIGER, buffer, BUF_SIZE, &recdLen);
   // TODO: what to do if I2Ccomm returns negative value ?
 
   Byte2Float(rad, buffer);
@@ -82,7 +82,7 @@ float SAT_Geiger::getUSPH(byte tube_handle){
 }
 
 // simple I2C send wrapper
-// jfomhover 08/09/2013 : replaced by I2CComm functions
+// jfomhover 08/09/2013 : replaced by OBCL functions
 /*void SAT_Geiger::send(byte* data, unsigned int len){
   Wire.beginTransmission(I2C_ADD_GEIGER);
   Wire.write(data, len);
@@ -90,7 +90,7 @@ float SAT_Geiger::getUSPH(byte tube_handle){
 }*/
 
 // simple I2C receive wrapper
-// jfomhover 08/09/2013 : replaced by I2CComm functions
+// jfomhover 08/09/2013 : replaced by OBCL functions
 /*void SAT_Geiger::receive(byte* data, unsigned int len){
   Wire.requestFrom(I2C_ADD_GEIGER, len);
   if (Wire.available())

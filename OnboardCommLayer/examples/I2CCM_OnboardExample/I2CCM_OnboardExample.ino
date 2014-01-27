@@ -1,6 +1,6 @@
 /*
     file : I2CCM_OnboardExample.ino
-    content : for ArduSat, does what the OnboardCommLayer does, but via the I2C_CommManager class, with a full error handling
+    content : for ArduSat, shows what the OnboardCommLayer does
     @author : Jean-François Omhover
 
     This program is free software: you can redistribute it and/or modify
@@ -19,18 +19,15 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <I2CComm.h>
-#include <I2C_add.h>
-#include <nanosat_message.h>
-//#include <OnboardCommLayer.h> // no need here
 #include <EEPROM.h>
+#include <OnboardCommLayer.h> // no need here
 
 nanosat_message_t msg;
 char messageStr[] = "allo Houston ?";
 
 void setup() {  
   Serial.begin(9600);
-  I2CComm.begin();
+  OBCL.begin();
 }
 
 void loop() {
@@ -44,7 +41,7 @@ void loop() {
   msg.type      = APPEND;
   memcpy(msg.buf, (uint8_t*)messageStr, strlen(messageStr));
   
-  int8_t t_ret = I2CComm.sendBuffer(addr, (byte*)&msg, sizeof(nanosat_message_t));
+  int8_t t_ret = OBCL.sendBuffer(addr, (byte*)&msg, sizeof(nanosat_message_t));
   printReturnMessage(t_ret);
 
   delay(1000);

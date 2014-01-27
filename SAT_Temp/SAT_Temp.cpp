@@ -23,7 +23,7 @@
 #include <Arduino.h>
 #include "SAT_Temp.h"
 #include <Wire.h>
-#include <I2CComm.h>
+#include <OnboardCommLayer.h>	// for OBCL
 
 /******************************************************************************
  * Definitions
@@ -57,6 +57,7 @@ SAT_Temp::SAT_Temp(uint8_t tempid){
 
 void SAT_Temp::init() { // // jfomhover on 07/08/2013 : uint8_t nodeid not needed
 //  _local_address = nodeid;
+	OBCL.begin();
 }
 
 float SAT_Temp::getTemp(){
@@ -68,7 +69,7 @@ float SAT_Temp::getTemp(){
 
 int16_t SAT_Temp::getRawTemp() {
 	int16_t TemperatureSum = 0;
-	int8_t t_ret = I2CComm.request16bits(_temp_i2c_addr, (uint16_t*)(&TemperatureSum), true, I2C_COMM_INSTANTTIMEOUT);
+	int8_t t_ret = OBCL.request16bits(_temp_i2c_addr, (uint16_t*)(&TemperatureSum), true, I2C_COMM_INSTANTTIMEOUT);
 	// TODO : what should we do here if there's an error ?
 
 	//it's a 12bit int, using two's compliment for negative

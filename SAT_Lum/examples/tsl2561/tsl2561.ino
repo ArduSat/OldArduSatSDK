@@ -1,10 +1,7 @@
 #include <Wire.h>
 #include <EEPROM.h>
-#include "nanosat_message.h"
-#include "I2C_add.h"
-#include "SAT_Lum.h"
-#include "OnboardCommLayer.h"
-#include "I2CComm.h"
+#include <OnboardCommLayer.h>
+#include <SAT_Lum.h>
 
 // Example for demonstrating the SAT_Lum library - public domain!
 
@@ -21,7 +18,7 @@ SAT_Lum tsl(1);
 
 void setup(void) {
   Serial.begin(115200);
-  I2CComm.begin();
+  OBCL.begin();
 
   if (tsl.begin()) {
     Serial.println("Found sensor");

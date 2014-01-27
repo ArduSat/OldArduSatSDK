@@ -1,8 +1,8 @@
 #include <Wire.h>
 #include <EEPROM.h>
-#include "I2C_add.h"
-#include "OnboardCommLayer.h"
-#include "nanosat_message.h"
+#include <OnboardCommLayer.h>
+//#include "I2C_add.h"
+//#include "nanosat_message.h"
 
 OnboardCommLayer ocl;
 uint8_t nodeAddress;
@@ -11,10 +11,11 @@ bool    halted;
 void setup()
 {
     Serial.begin(115200);
-    Wire.begin();
+    //    Wire.begin();
     halted      = false;
-    ocl         = OnboardCommLayer();
-    nodeAddress = EEPROM.read(0x00);
+//	ocl         = OnboardCommLayer();
+//    nodeAddress = EEPROM.read(0x00);
+    OBCL.begin();
     Serial.println("Initialized Serial and I2C bus");
 }
 

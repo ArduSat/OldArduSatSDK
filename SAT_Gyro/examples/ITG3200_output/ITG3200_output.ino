@@ -9,7 +9,8 @@
 #include <Arduino.h>
 #include <I2C_add.h>
 #include <Wire.h>
-#include <I2CComm.h>
+#include <EEPROM.h>
+#include <OnboardCommLayer.h>
 #include <SAT_Gyro.h>
 
 
@@ -19,7 +20,7 @@ float xyz[3], temperature;
 void setup(void) {
   Serial.begin(9600);
   Serial.println("beginning...");
-  I2CComm.begin();      // if experiencing gyro problems/crashes while reading XYZ values
+  OBCL.begin();      // if experiencing gyro problems/crashes while reading XYZ values
                      // please read class constructor comments for further info.
   delay(1000);
   gyro.reset();

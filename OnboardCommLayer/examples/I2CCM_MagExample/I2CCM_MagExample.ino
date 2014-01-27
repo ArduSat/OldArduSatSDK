@@ -18,15 +18,15 @@
  */
 #include <Arduino.h>
 #include <Wire.h>
-#include <I2CComm.h>
-#include <I2C_add.h>
+#include <EEPROM.h>
+#include <OnboardCommLayer.h>
 //#include <SAT_Mag.h> // no need here
 
 void printReturnMessage(int ret);
 
 void setup() {  
   Serial.begin(9600);
-  I2CComm.begin();
+  OBCL.begin();
 }
 
 void loop() {
@@ -38,18 +38,18 @@ void loop() {
 // configMag
   commands[0] = 0x11;  // cntrl register2
   commands[1] = 0x80;  // send 0x80, enable auto resets
-  t_ret = I2CComm.transmitByteArray(addr, commands, 2, timeout);
+  t_ret = OBCL.transmitByteArray(addr, commands, 2, timeout);
   printReturnMessage(t_ret);
 
   commands[0] = 0x10;  // cntrl register1
   commands[1] = 0x01;  // send 0x01, active mode
-  t_ret = I2CComm.transmitByteArray(addr, commands, 2, timeout);
+  t_ret = OBCL.transmitByteArray(addr, commands, 2, timeout);
   printReturnMessage(t_ret);
 
   while(1) {
     Serial.println("requesting X value...");
     int16_t mag_x = 0;
-    t_ret = I2CComm.request16bitsFromMSBLSB(addr, 0x01, 0x02, (uint16_t*)&mag_x);
+    t_ret = OBCL.request16bitsFromMSBLSB(addr, 0x01, 0x02, (uint16_t*)&mag_x);
     printReturnMessage(t_ret);
     Serial.print("magnetometer X = ");
     Serial.print(mag_x);
@@ -57,7 +57,7 @@ void loop() {
 
     Serial.println("requesting Y value...");
     int16_t mag_y = 0;
-    t_ret = I2CComm.request16bitsFromMSBLSB(addr, 0x03, 0x04, (uint16_t*)&mag_y);
+    t_ret = OBCL.request16bitsFromMSBLSB(addr, 0x03, 0x04, (uint16_t*)&mag_y);
     printReturnMessage(t_ret);
     Serial.print("magnetometer Y = ");
     Serial.print(mag_y);
@@ -65,7 +65,7 @@ void loop() {
 
     Serial.println("requesting Z value...");
     int16_t mag_z = 0;
-    t_ret = I2CComm.request16bitsFromMSBLSB(addr, 0x05, 0x06, (uint16_t*)&mag_z);
+    t_ret = OBCL.request16bitsFromMSBLSB(addr, 0x05, 0x06, (uint16_t*)&mag_z);
     printReturnMessage(t_ret);
     Serial.print("magnetometer Z = ");
     Serial.print(mag_z);

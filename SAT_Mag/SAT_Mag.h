@@ -29,7 +29,6 @@
 #define SAT_MAG_H
 
 #include <Arduino.h>
-#include <I2CComm.h>
 
 class SAT_Mag
 {

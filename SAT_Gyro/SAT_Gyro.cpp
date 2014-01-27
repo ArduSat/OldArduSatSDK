@@ -24,7 +24,7 @@
 #include <Arduino.h>
 #include "SAT_Gyro.h"
 #include <Wire.h>
-#include <I2CComm.h>
+#include <OnboardCommLayer.h>	// for OBCL
 
 SAT_Gyro::SAT_Gyro() {
   setOffsets(0,0,0);
@@ -36,8 +36,9 @@ SAT_Gyro::SAT_Gyro() {
 }
 
 void SAT_Gyro::init(unsigned int  address) {
-  // Uncomment or change your default ITG3200 initialization
+	  OBCL.begin();
 
+	  // Uncomment or change your default ITG3200 initialization
   // fast sample rate - divisor = 0 filter = 0 clocksrc = 0, 1, 2, or 3  (raw values)
   init(address, NOSRDIVIDER, RANGE2000, BW256_SR8, PLL_XGYRO_REF, true, true);
 
@@ -304,15 +305,15 @@ void SAT_Gyro::writemem(uint8_t _addr, uint8_t _val) {
 	content[0] = _addr;
 	content[1] = _val;
 
-	I2CComm.transmitByteArray(_dev_address, content, 2);
+	OBCL.transmitByteArray(_dev_address, content, 2);
 	// TODO : what to do if this fails ?
 }
 
 void SAT_Gyro::readmem(uint8_t _addr, uint8_t _nbytes, uint8_t __buff[]) {
-	I2CComm.transmitByte(_dev_address, _addr);
+	OBCL.transmitByte(_dev_address, _addr);
 
 	uint8_t recLen = 0;
-	I2CComm.requestByteArray(_dev_address, _buff, _nbytes, &recLen);
+	OBCL.requestByteArray(_dev_address, _buff, _nbytes, &recLen);
 	// TODO : what to do if this fails ?
 }
 

@@ -19,16 +19,16 @@
 
 #include <Wire.h>
 #include <EEPROM.h>
-#include "OnboardCommLayer.h"
-#include "nanosat_message.h"
-#include "I2C_add.h"
-#include "SAT_InfraTherm.h"
+#include <OnboardCommLayer.h>
+//#include "nanosat_message.h"
+//#include "I2C_add.h"
+#include <SAT_InfraTherm.h>
 
 SAT_InfraTherm mlx;
 
 void setup(){
   Serial.begin(9600); //begin Serial monitor 
-
+  OBCL.begin();
   Serial.println("Setup..."); //initialization complete
 }
 

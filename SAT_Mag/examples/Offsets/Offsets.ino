@@ -16,10 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <SAT_Mag.h>
-#include <I2C_add.h>
 #include <Wire.h>
-#include <I2CComm.h>
+#include <EEPROM.h>
+#include <OnboardCommLayer.h>
+#include <SAT_Mag.h>
+
 
 SAT_Mag mag; //create an object of NS_MAG
 
@@ -34,7 +35,7 @@ int xmin, xmax, ymax, ymin, zmin, zmax; //minimum and maximum variables for each
 
 void setup()
 {
-  I2CComm.begin();
+  OBCL.begin();
   Serial.begin(9600);  //begin the serial monitor
 
   mag.configMag();  // turn the MAG3110 on

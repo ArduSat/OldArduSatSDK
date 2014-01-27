@@ -18,15 +18,14 @@
  */
 #include <Arduino.h>
 #include <Wire.h>
-#include <I2CComm.h>
-#include <I2C_add.h>
-//#include <SAT_Lum.h> // no need here
+#include <EEPROM.h>
+#include <OnboardCommLayer.h>
 
 void printReturnMessage(int ret);
 
 void setup() {  
   Serial.begin(9600);
-  I2CComm.begin();
+  OBCL.begin();
 }
 
 void loop() {
@@ -35,7 +34,7 @@ void loop() {
   uint8_t retByte = 0;
   int timeout = 500; // 500 ms
 
-  int8_t t_ret = I2CComm.exchangeByte(addr, content, &retByte, timeout);
+  int8_t t_ret = OBCL.exchangeByte(addr, content, &retByte, timeout);
   printReturnMessage(t_ret);
   
   if ((retByte ^ 0x0A) == 0) {
@@ -75,4 +74,3 @@ void printReturnMessage(int t_ret) {
     Serial.println(" bytes sent.");
   }
 }
-

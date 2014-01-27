@@ -30,7 +30,7 @@ http://dlnmh9ip6v2uc.cloudfront.net/datasheets/BreakoutBoards/Mag3110_v10.pde
 
 #include "SAT_Mag.h"
 #include <I2C_add.h>
-#include <I2CComm.h>
+#include <OnboardCommLayer.h>	// for OBCL
 
 //Constructor 
 SAT_Mag::SAT_Mag()
@@ -46,7 +46,7 @@ SAT_Mag::SAT_Mag()
     mag_z_scale= 1.0/(2872 - 2722);  //offset scale factor: 1.0/(max_z - min_z)
 }
 
-// jfomhover on 07/08/2013 : function not used ? furthermore, the "node_id" should be given by a "central power" (I2CComm)
+// jfomhover on 07/08/2013 : function not used ? furthermore, the "node_id" should be given by a "central power" (OBCL)
 /* void SAT_Mag::init(uint8_t node_id){
     _local_address = node_id;
     this->configMag();
@@ -58,15 +58,17 @@ void SAT_Mag::configMag() {
 	byte commands[2];
 	int8_t t_ret = 0;
 
+	OBCL.begin();
+
 	commands[0] = 0x11;  // cntrl register2
 	commands[1] = 0x80;  // send 0x80, enable auto resets
-	t_ret = I2CComm.transmitByteArray(I2C_ADD_MAG, commands, 2, I2C_COMM_INSTANTTIMEOUT);
+	t_ret = OBCL.transmitByteArray(I2C_ADD_MAG, commands, 2, I2C_COMM_INSTANTTIMEOUT);
 
 	delay(15);
 
 	commands[0] = 0x10;  // cntrl register1
 	commands[1] = 0x01;  // send 0x01, active mode
-	t_ret = I2CComm.transmitByteArray(I2C_ADD_MAG, commands, 2, I2C_COMM_INSTANTTIMEOUT);
+	t_ret = OBCL.transmitByteArray(I2C_ADD_MAG, commands, 2, I2C_COMM_INSTANTTIMEOUT);
 
 	// jfomhover on 07/08/2013 : what should we do here if there's an error ?
 	// in particular, I2C_COMM_ERRORNACKADDR that means the sensor's not connected
@@ -76,7 +78,7 @@ void SAT_Mag::configMag() {
 int SAT_Mag::readx()
 {
 	int16_t t_val = 0;
-	int8_t t_ret = I2CComm.request16bitsFromMSBLSB(I2C_ADD_MAG, 0x01, 0x02, (uint16_t*)&t_val);
+	int8_t t_ret = OBCL.request16bitsFromMSBLSB(I2C_ADD_MAG, 0x01, 0x02, (uint16_t*)&t_val);
 	// TODO : what should we do here if there's an error ?
 	return t_val;
 }
@@ -85,7 +87,7 @@ int SAT_Mag::readx()
 int SAT_Mag::ready()
 {
 	int16_t t_val = 0;
-	int8_t t_ret = I2CComm.request16bitsFromMSBLSB(I2C_ADD_MAG, 0x03, 0x04, (uint16_t*)&t_val);
+	int8_t t_ret = OBCL.request16bitsFromMSBLSB(I2C_ADD_MAG, 0x03, 0x04, (uint16_t*)&t_val);
 	// TODO : what should we do here if there's an error ?
 	return t_val;
 }
@@ -94,7 +96,7 @@ int SAT_Mag::ready()
 int SAT_Mag::readz()
 {
 	int16_t t_val = 0;
-	int8_t t_ret = I2CComm.request16bitsFromMSBLSB(I2C_ADD_MAG, 0x05, 0x06, (uint16_t*)&t_val);
+	int8_t t_ret = OBCL.request16bitsFromMSBLSB(I2C_ADD_MAG, 0x05, 0x06, (uint16_t*)&t_val);
 	// TODO : what should we do here if there's an error ?
 	return t_val;
 }
