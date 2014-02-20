@@ -6,12 +6,15 @@ every 1s
 @author: Jeroen Cappaert
 (c) NanoSatisfi 2012
 
+modified by jfomhover on Jan. 2014 for ArduSatSDK
+
 */
 
 #include <Wire.h>
 #include <I2C_Conv.h>
-#include <I2C_add.h>
+//#include <I2C_add.h>
 #include <EEPROM.h>
+#include <OnboardCommLayer.h>
 
 #include "SAT_Geiger.h"
 
@@ -30,7 +33,7 @@ float rad;
 
 void setup(){
   Serial.begin(115200);
-  Wire.begin(); //join I2C as master
+  OBCL.begin(); //join I2C as node
 
   Serial.println("=== ArduSat sensor poller - RESET ===");
 }
@@ -41,9 +44,8 @@ void setup(){
 
 void loop(){  
   //flush I2C buffer
-  while(Wire.available()){
-    Wire.read();
-  }
+  OBCL.flushWrite();
+  OBCL.flushRead();
   
   //---------//
   // TUBE 1  //

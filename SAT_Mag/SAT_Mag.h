@@ -41,10 +41,11 @@ class SAT_Mag
     the supervisor to know which arduino node to send the data back to. 
     The id is assigned by NanoSatisfi.
     */
-    void init(uint8_t node_id);
+    // void init(uint8_t node_id); // jfomhover on 07/08/2013 : function not used ? furthermore, the "node_id" should be given by a "central power" (I2CComm)
+
 
     /**Initializes the magnetometer. */
-    void configMag(); 
+    void configMag();
 
     /**Reads the x vector. */
     int readx();
@@ -72,11 +73,11 @@ class SAT_Mag
     int getHeading(float x, float y, float z);
 
   private:
-    uint8_t _local_address;
-    byte _buff[2];
+    //uint8_t _local_address; // jfomhover on 07/08/2013 : handled by I2CComm
+    // byte _buff[2]; // jfomhover on 07/08/2013 : unused in the class ??
 
-    //class-only methods:
-    int read16Data(char msg_reg, char lsb_reg);
+    // class-only methods:
+    // int read16Data(char msg_reg, char lsb_reg); // jfomhover on 07/08/2013 : handled by I2CComm
 
     //global variables
     float mag_x_scale;

@@ -23,6 +23,7 @@
 #include <Arduino.h>
 #include "SAT_Temp.h"
 #include <Wire.h>
+#include <OnboardCommLayer.h>	// for OBCL
 
 /******************************************************************************
  * Definitions
@@ -54,30 +55,25 @@ SAT_Temp::SAT_Temp(uint8_t tempid){
  * User API
  ******************************************************************************/
 
-void SAT_Temp::init(uint8_t nodeid){
-  _local_address = nodeid;
+void SAT_Temp::init() { // // jfomhover on 07/08/2013 : uint8_t nodeid not needed
+//  _local_address = nodeid;
+	OBCL.begin();
 }
 
 float SAT_Temp::getTemp(){
-  Wire.requestFrom(_temp_i2c_addr, (uint8_t)2);
-
-  byte MSB = Wire.read();
-  byte LSB = Wire.read();
-
-  //it's a 12bit int, using two's compliment for negative
-  int TemperatureSum = ((MSB << 8) | LSB) >> 4; 
+  int TemperatureSum = getRawTemp();
 
   float celsius = TemperatureSum*0.0625;
   return celsius;
 }
 
 int16_t SAT_Temp::getRawTemp() {
-  Wire.requestFrom(_temp_i2c_addr, (uint8_t)2);
+	int16_t TemperatureSum = 0;
+	int8_t t_ret = OBCL.request16bits(_temp_i2c_addr, (uint16_t*)(&TemperatureSum), true, I2C_COMM_INSTANTTIMEOUT);
+	// TODO : what should we do here if there's an error ?
 
-  byte MSB = Wire.read();
-  byte LSB = Wire.read();
-
-  //it's a 12bit int, using two's compliment for negative
-  int16_t TemperatureSum = ((MSB << 8) | LSB) >> 4; 
+	//it's a 12bit int, using two's compliment for negative
+  TemperatureSum = TemperatureSum >> 4;
+  // TODO : use two's compliment for negative somehow ?
   return(TemperatureSum);
 }

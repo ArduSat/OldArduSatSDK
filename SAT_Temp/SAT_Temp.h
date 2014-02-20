@@ -26,7 +26,7 @@
 
 class SAT_Temp{
   private:
-    uint8_t _local_address;
+    // uint8_t _local_address; // jfomhover on 07/08/2013 : not used
     uint8_t _temp_i2c_addr;
     byte _buff[2];
 
@@ -42,7 +42,7 @@ class SAT_Temp{
     the supervisor to know which arduino node to send the data back to. 
     The id is assigned by NanoSatisfi.
     */
-    void init(uint8_t nodeid);
+    void init(); // jfomhover on 07/08/2013 : uint8_t nodeid not used anywhere
     /**Returns the tempurature in Celsius from the sensor. */
     float getTemp();    //returns temperature in celcius
     int16_t getRawTemp(); // returns the raw value from the sensor (12bits)

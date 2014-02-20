@@ -1,9 +1,7 @@
 #include <Wire.h>
 #include <EEPROM.h>
-#include "nanosat_message.h"
-#include "I2C_add.h"
-#include "SAT_Lum.h"
-#include "OnboardCommLayer.h"
+#include <OnboardCommLayer.h>
+#include <SAT_Lum.h>
 
 // Example for demonstrating the SAT_Lum library - public domain!
 
@@ -13,15 +11,16 @@
 // connect GROUND to common ground
 // ADDR can be connected to ground, or vdd or left floating to change the i2c address
 
-// The address will be different depending on whether you let
-// the ADDR pin float (addr 0x39), or tie it to ground or vcc. In those cases
-// use SAT_Lum_ADDR_LOW (0x29) or SAT_Lum_ADDR_HIGH (0x49) respectively
-SAT_Lum tsl(SAT_Lum_ADDR_FLOAT);
+// The argument corresponds to the address of the luminosity sensor
+// use 1 for I2C_ADD_LUX1 (0x29) - TSL2561 #1 bottomplate camera
+// use 2 for I2C_ADD_LUX2 (0x39) - TSL2561 #2 bottomplate slit
+SAT_Lum tsl(1);
 
 void setup(void) {
   Serial.begin(115200);
+  OBCL.begin();
 
-  if (tsl.begin(1)) {
+  if (tsl.begin()) {
     Serial.println("Found sensor");
   } else {
     Serial.println("No sensor?");

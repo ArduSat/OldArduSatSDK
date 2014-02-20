@@ -3,9 +3,9 @@
 */
 
 #include <Wire.h>
-#include <I2C_add.h>
-#include "SAT_Temp.h"
-#include "nanosat_message.h"
+#include <EEPROM.h>
+#include <OnboardCommLayer.h>
+#include <SAT_Temp.h>
 
 #define TEMP_PAYLOAD 0
 #define TEMP_BOTTOMPLATE 2
@@ -17,7 +17,7 @@ SAT_Temp tmp_payload(TEMP_PAYLOAD);
  */
 void setup(){
     Serial.begin(9600);
-    Wire.begin();
+    OBCL.begin();
     Serial.println("Setup done");
 }
 

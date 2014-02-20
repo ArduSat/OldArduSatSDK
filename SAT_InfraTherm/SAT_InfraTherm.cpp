@@ -28,6 +28,7 @@
 */
 
 #include "SAT_InfraTherm.h"
+#include <OnboardCommLayer.h>	// for OBCL
 
 //constructor
 SAT_InfraTherm::SAT_InfraTherm(){
@@ -39,20 +40,22 @@ SAT_InfraTherm::SAT_InfraTherm(){
 //modifies tempData into temperature in Kelvin
 void SAT_InfraTherm::rawTemperature(unsigned char r)
 {
-  int data_low, data_high, pec;
+  int8_t data_t[3];
+//  int data_low, data_high, pec;
 
-  Wire.beginTransmission(NS_InfraTherm); //begins transmission with device
-  Wire.write(r); //sends register address to read
-  Wire.endTransmission(0); //repeated start
+  OBCL.transmitByte(NS_InfraTherm,r,0);	//repeated start
 
-  Wire.requestFrom(NS_InfraTherm, 3); //request three bytes from device
+  uint8_t recdSize = 0;
+  int8_t t_ret = OBCL.requestByteArray(NS_InfraTherm, (byte*)data_t, 3, &recdSize);
 
-  while(Wire.available() <3); //wait for three bytes to become available
-  data_low = Wire.read(); //read first byte
-  data_high = Wire.read(); //read second byte
-  pec = Wire.read(); //read checksum 
+// TODO : what to do here if errors ?
+  if (t_ret < 0)
+	  return;
 
-  Wire.endTransmission(); //terminate transmission
+  // jfomhover 08/09/2013 : below, I didn't want to ruin the clarity of the formula, but these variables can be skipped
+  int8_t data_low =  data_t[0]; //read first byte
+  int8_t data_high = data_t[1]; //read second byte
+  int8_t pec = 		 data_t[2]; //read checksum
 
   // This masks off the error bit of the high byte,
   // then moves it left 8 bits and adds the low byte.

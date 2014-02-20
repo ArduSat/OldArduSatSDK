@@ -30,7 +30,7 @@ http://dlnmh9ip6v2uc.cloudfront.net/datasheets/BreakoutBoards/Mag3110_v10.pde
 
 #include "SAT_Mag.h"
 #include <I2C_add.h>
-#include <Wire.h>
+#include <OnboardCommLayer.h>	// for OBCL
 
 //Constructor 
 SAT_Mag::SAT_Mag()
@@ -46,81 +46,59 @@ SAT_Mag::SAT_Mag()
     mag_z_scale= 1.0/(2872 - 2722);  //offset scale factor: 1.0/(max_z - min_z)
 }
 
-void SAT_Mag::init(uint8_t node_id){
+// jfomhover on 07/08/2013 : function not used ? furthermore, the "node_id" should be given by a "central power" (OBCL)
+/* void SAT_Mag::init(uint8_t node_id){
     _local_address = node_id;
     this->configMag();
-}
+} */
 
 // Configure magnetometer
 // call in setup()
 void SAT_Mag::configMag() {
-  Wire.beginTransmission(I2C_ADD_MAG);  // transmit to device 0x0E
-  Wire.write(0x11);                     // cntrl register2
-  Wire.write(0x80);                     // send 0x80, enable auto resets
-  Wire.endTransmission();               // stop transmitting
+	byte commands[2];
+	int8_t t_ret = 0;
 
-  delay(15);
+	OBCL.begin();
 
-  Wire.beginTransmission(I2C_ADD_MAG);  // transmit to device 0x0E
-  Wire.write(0x10);                     // cntrl register1
-  Wire.write(1);                        // send 0x01, active mode
-  Wire.endTransmission();               // stop transmitting
+	commands[0] = 0x11;  // cntrl register2
+	commands[1] = 0x80;  // send 0x80, enable auto resets
+	t_ret = OBCL.transmitByteArray(I2C_ADD_MAG, commands, 2, I2C_COMM_INSTANTTIMEOUT);
+
+	delay(15);
+
+	commands[0] = 0x10;  // cntrl register1
+	commands[1] = 0x01;  // send 0x01, active mode
+	t_ret = OBCL.transmitByteArray(I2C_ADD_MAG, commands, 2, I2C_COMM_INSTANTTIMEOUT);
+
+	// jfomhover on 07/08/2013 : what should we do here if there's an error ?
+	// in particular, I2C_COMM_ERRORNACKADDR that means the sensor's not connected
 }
 
 // read X value
 int SAT_Mag::readx()
 {
-  int xout = read16Data(0x01, 0x02); //returns MSB and LSB from 0x01 and 0x02
-  return xout;
+	int16_t t_val = 0;
+	int8_t t_ret = OBCL.request16bitsFromMSBLSB(I2C_ADD_MAG, 0x01, 0x02, (uint16_t*)&t_val);
+	// TODO : what should we do here if there's an error ?
+	return t_val;
 }
 
 //read Y value
 int SAT_Mag::ready()
 {
-  int yout = read16Data(0x03, 0x04); //returns MSB and LSB from 0x03 and 0x04
-  return yout;
+	int16_t t_val = 0;
+	int8_t t_ret = OBCL.request16bitsFromMSBLSB(I2C_ADD_MAG, 0x03, 0x04, (uint16_t*)&t_val);
+	// TODO : what should we do here if there's an error ?
+	return t_val;
 }
 
 // read Z value
 int SAT_Mag::readz()
 {
-  int zout = read16Data(0x05, 0x06); //returns MSB and LSB from 0x05 and 0x06
-  return zout;
-}
-
-//reads two bytes of data
-int SAT_Mag::read16Data(char msg_reg, char lsb_reg)
-{
-  int xl, xh;  //define the MSB and LSB
-
-  Wire.beginTransmission(I2C_ADD_MAG); // transmit to device 0x0E
-  Wire.write(msg_reg);              // x MSB reg
-  Wire.endTransmission();       // stop transmitting
-
-  delayMicroseconds(2); //needs at least 1.3us free time between start and stop
-
-  Wire.requestFrom(I2C_ADD_MAG, 1); // request 1 byte
-  while(Wire.available())    // slave may send less than requested
-  {
-    xh = Wire.read(); // read the byte
-  }
-
-  delayMicroseconds(2); //needs at least 1.3us free time between start and stop
-
-  Wire.beginTransmission(I2C_ADD_MAG); // transmit to device 0x0E
-  Wire.write(lsb_reg);              // x LSB reg
-  Wire.endTransmission();       // stop transmitting
-
-  delayMicroseconds(2); //needs at least 1.3us free time between start and stop
-
-  Wire.requestFrom(I2C_ADD_MAG, 1); // request 1 byte
-  while(Wire.available())    // slave may send less than requested
-  {
-    xl = Wire.read(); // read the byte
-  }
-
-  int xout = (xl|(xh << 8)); //concatenate the MSB and LSB
-  return xout;
+	int16_t t_val = 0;
+	int8_t t_ret = OBCL.request16bitsFromMSBLSB(I2C_ADD_MAG, 0x05, 0x06, (uint16_t*)&t_val);
+	// TODO : what should we do here if there's an error ?
+	return t_val;
 }
 
 /*

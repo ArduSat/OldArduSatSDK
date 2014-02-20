@@ -39,9 +39,11 @@
 #include <stdlib.h>
 #include <Wire.h>
 #include "SAT_Lum.h"
+#include <I2C_add.h>
+#include <OnboardCommLayer.h>	// for OBCL
 
 SAT_Lum::SAT_Lum(uint8_t id) {
-  _addr = id;
+//  _addr = id; // jfomhover on 07/08/2013 : commented cause not used
   _addr = I2C_ADD_LUX1;
   switch(id){
     case 1:
@@ -57,74 +59,70 @@ SAT_Lum::SAT_Lum(uint8_t id) {
   _gain = SAT_Lum_GAIN_16X;
 }
 
-boolean SAT_Lum::begin(uint8_t nodeid) {
-  Wire.begin();
+boolean SAT_Lum::begin() { // jfomhover on 07/08/2013 : argument (uint8_t nodeid) was not used in here..
+/*  Wire.begin(); */ // jfomhover on 07/08/2013 : shouldn't be made, cause already begun in OnboardCommLayer.cpp
+	OBCL.begin();
 
- // Initialise I2C
-  Wire.beginTransmission(_addr);
-#if ARDUINO >= 100
-  Wire.write(SAT_Lum_REGISTER_ID);
-#else
-  Wire.send(SAT_Lum_REGISTER_ID);
-#endif
-  Wire.endTransmission();
-  Wire.requestFrom(_addr, 1);
-#if ARDUINO >= 100
-  int x = Wire.read();
-#else
-  int x = Wire.receive();
-#endif
+	uint8_t retByte = 0;
 
-  //Serial.print("0x"); Serial.println(x, HEX);
-  if (x & 0x0A ) {
-    //Serial.println("Found SAT_Lum");
-  } else {
-    return false;
-  }
-  _initialized = true;
+	int8_t t_ret = OBCL.exchangeByte(_addr, SAT_Lum_REGISTER_ID, &retByte, I2C_COMM_INSTANTTIMEOUT);
 
-  // Set default integration time and gain
-  setTiming(_integration);
-  setGain(_gain);
-  // Note: by default, the device is in power down mode on bootup
-  disable();
+	if ((retByte ^ 0x0A) != 0) {
+		// sensor not found
+		_initialized = false;
+		return(false);
+	}
+	_initialized = true;
 
-  return true;
+	// Set default integration time and gain
+	setTiming(_integration);
+	setGain(_gain);
+	// Note: by default, the device is in power down mode on bootup
+	disable();
+
+	return true;
 }
 
 void SAT_Lum::enable(void)
 {
-  if (!_initialized) begin(_local_address);
+  if (!_initialized) begin();
 
   // Enable the device by setting the control bit to 0x03
-  write8(SAT_Lum_COMMAND_BIT | SAT_Lum_REGISTER_CONTROL, SAT_Lum_CONTROL_POWERON);
+  int8_t t_ret = write8(SAT_Lum_COMMAND_BIT | SAT_Lum_REGISTER_CONTROL, SAT_Lum_CONTROL_POWERON);
+  // jfomhover on 07/08/2013 : what should we do here if there's an error ?
+  // in particular, if t_ret == I2C_COMM_ERRORNACKADDR that means the sensor's not connected
 }
 
 void SAT_Lum::disable(void)
 {
-  if (!_initialized) begin(_local_address);
+  if (!_initialized) begin();
 
   // Disable the device by setting the control bit to 0x03
-  write8(SAT_Lum_COMMAND_BIT | SAT_Lum_REGISTER_CONTROL, SAT_Lum_CONTROL_POWEROFF);
+  int8_t t_ret = write8(SAT_Lum_COMMAND_BIT | SAT_Lum_REGISTER_CONTROL, SAT_Lum_CONTROL_POWEROFF);
+  // jfomhover on 07/08/2013 : what should we do here if there's an error ?
+  // in particular, if t_ret == I2C_COMM_ERRORNACKADDR that means the sensor's not connected
 }
 
-
 void SAT_Lum::setGain(tsl2561Gain_t gain) {
-  if (!_initialized) begin(_local_address);
+  if (!_initialized) begin();
 
   enable();
   _gain = gain;
-  write8(SAT_Lum_COMMAND_BIT | SAT_Lum_REGISTER_TIMING, _integration | _gain);  
+  int8_t t_ret = write8(SAT_Lum_COMMAND_BIT | SAT_Lum_REGISTER_TIMING, _integration | _gain);
+  // jfomhover on 07/08/2013 : what should we do here if there's an error ?
+  // in particular, if t_ret == I2C_COMM_ERRORNACKADDR that means the sensor's not connected
   disable();
 }
 
 void SAT_Lum::setTiming(tsl2561IntegrationTime_t integration)
 {
-  if (!_initialized) begin(_local_address);
+  if (!_initialized) begin();
 
   enable();
   _integration = integration;
-  write8(SAT_Lum_COMMAND_BIT | SAT_Lum_REGISTER_TIMING, _integration | _gain);  
+  int8_t t_ret = write8(SAT_Lum_COMMAND_BIT | SAT_Lum_REGISTER_TIMING, _integration | _gain);
+  // jfomhover on 07/08/2013 : what should we do here if there's an error ?
+  // in particular, if t_ret == I2C_COMM_ERRORNACKADDR that means the sensor's not connected
   disable();
 }
 
@@ -217,7 +215,7 @@ uint32_t SAT_Lum::calculateLux(uint16_t ch0, uint16_t ch1)
 
 uint32_t SAT_Lum::getFullLuminosity (void)
 {
-  if (!_initialized) begin(_local_address);
+  if (!_initialized) begin();
 
   // Enable the device by setting the control bit to 0x03
   enable();
@@ -266,6 +264,12 @@ uint16_t SAT_Lum::getLuminosity (uint8_t channel) {
 
 uint16_t SAT_Lum::read16(uint8_t reg)
 {
+	uint16_t out = 0;	// output value of the function
+
+	int8_t t_ret = OBCL.request16bitsFromREG(_addr, reg, &out, false, I2C_COMM_INSTANTTIMEOUT);
+	return(out);
+
+/* KEPT FOR MEMORY
   uint16_t x; uint16_t t;
 
   Wire.beginTransmission(_addr);
@@ -287,17 +291,13 @@ uint16_t SAT_Lum::read16(uint8_t reg)
   x <<= 8;
   x |= t;
   return x;
+*/
 }
 
-void SAT_Lum::write8 (uint8_t reg, uint8_t value)
+int8_t SAT_Lum::write8 (uint8_t reg, uint8_t value)
 {
-  Wire.beginTransmission(_addr);
-#if ARDUINO >= 100
-  Wire.write(reg);
-  Wire.write(value);
-#else
-  Wire.send(reg);
-  Wire.send(value);
-#endif
-  Wire.endTransmission();
+	_buff[0] = reg;
+	_buff[1] = value;
+	int8_t t_ret = OBCL.transmitByteArray(_addr, _buff, 2, I2C_COMM_INSTANTTIMEOUT);
+	return(t_ret);
 }

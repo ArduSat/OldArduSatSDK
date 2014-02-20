@@ -15,6 +15,7 @@
 
     @author Jeroen Cappaert and NanoSatisfi, Inc.
     @date May 2013
+    modified by jfomhover on Aug. 2013 for ArduSatSDK
 */
 
 #ifndef NANOSATISFI_GEIGER_H_
@@ -43,7 +44,7 @@ class SAT_Geiger{
      * the supervisor to know which arduino node to send the data back to.
      * The id is assigned by NanoSatisfi.
      */
-    void init(uint8_t node_id);
+    //void init(uint8_t node_id); // jfomhover 08/09/2013 : function not implemented ?
 
     /*
      * Get's the raw count per minute.
@@ -60,10 +61,10 @@ class SAT_Geiger{
     float getUSPH(byte tube_handle);
 
   private:
-    uint8_t _local_address;
+    //uint8_t _local_address; // jfomhover 08/09/2013 : not used
     byte buffer[BUF_SIZE];
-    void send(byte* data, unsigned int len);
-    void receive(byte* data, unsigned int len);
+    //void send(byte* data, unsigned int len);  // jfomhover 08/09/2013 : replaced by I2CComm functions
+    //void receive(byte* data, unsigned int len);  // jfomhover 08/09/2013 : replaced by I2CComm functions
 };
 
 #endif /* NANOSATISFI_GEIGER_H_*/
